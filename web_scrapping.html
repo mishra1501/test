@@ -1,0 +1,37 @@
+<html>
+    <head>
+      <style>
+        body{
+            background-color: grey;
+        }
+       </style>
+        </head>
+             <body>
+            <div id="scrapping">  </div>
+
+           
+
+              <script>
+                var dd=document.querySelectorAll('dd');
+                var names=new XMLHttpRequest();
+                names.open("GET","https://cors-anywhere.herokuapp.com/https://www.amazon.in/s?k=watch&ref=nb_sb_noss_2",true);
+                names.responseType="document";
+                names.onreadystatechange=function(){
+                if(names.readyState==4&&names.status==200){
+               var response=names.responseXML.getElementsByClassName('s-line-clamp-1');
+               console.log(response);
+               const root=document.getElementById('scrapping');
+                console.log(root);
+               for(var i=0;i<response.length;i++){
+               console.log(response[i].innerText);
+               const s=document.createElement("span");
+               const no=document.createTextNode(response[i].innerText);
+                s.appendChild(no);
+               root.appendChild(s);
+                }
+               }
+              }
+                names.send();
+              </script>
+          </body>
+</html>
