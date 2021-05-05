@@ -5,13 +5,24 @@
             background-color: grey;
         }
        </style>
+       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
         </head>
              <body>
-            <div id="scrapping">  </div>
+              <div class="container">
 
+              <table id="scrapping" border="1">
+            
+                <tr>
+                    <th> Watch Name</th>
+                </tr>
+                </table>   
+                <button onclick="exportToExcel('scrapping')">Export Table Data To Excel File</button>
+  
+      </div>
+              
            
-
-              <script>
+           <script>
                 var dd=document.querySelectorAll('dd');
                 var names=new XMLHttpRequest();
                 names.open("GET","https://cors-anywhere.herokuapp.com/https://www.amazon.in/s?k=watch&ref=nb_sb_noss_2",true);
@@ -23,15 +34,42 @@
                const root=document.getElementById('scrapping');
                 console.log(root);
                for(var i=0;i<response.length;i++){
-               console.log(response[i].innerText);
-               const s=document.createElement("span");
-               const no=document.createTextNode(response[i].innerText);
-                s.appendChild(no);
-               root.appendChild(s);
+                console.log(response[i].innerText);
+               const tr=document.createElement('tr');
+               const td=document.createElement("td");
+               const text=document.createTextNode(response[i].innerText);
+
+               td.appendChild(text);
+               tr.appendChild(td);
+               root.appendChild(tr);
                 }
                }
               }
                 names.send();
               </script>
-          </body>
+
+
+<script>
+            
+  function exportToExcel(tableID, filename = ''){
+    var downloadurl;
+    var dataFileType = 'application/vnd.ms-excel';
+    var tableSelect = document.getElementById(tableID);
+    var tableHTMLData = tableSelect.outerHTML.replace(/ /g, '%20');
+    filename = filename?filename+'.xls':'export_excel_data.xls';
+    downloadurl = document.createElement("a");
+    document.body.appendChild(downloadurl);
+    if(navigator.msSaveOrOpenBlob){
+        var blob = new Blob(['\ufeff', tableHTMLData], {
+            type: dataFileType
+        });
+        navigator.msSaveOrOpenBlob( blob, filename);
+    }else{
+        downloadurl.href = 'data:' + dataFileType + ', ' + tableHTMLData;
+        downloadurl.download = filename;
+        downloadurl.click();
+    }
+}
+ </script>
+</body>
 </html>
